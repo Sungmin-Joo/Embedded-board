@@ -12,7 +12,7 @@
 #include <fcntl.h> //file read write
 #include <linux/input.h> // touch screen
 #include <linux/fb.h>
-//math.h ¸¦ includeÇß±â ¶§¹®¿¡ ÄÄÆÄÀÏ½Ã -ln À» ²À ¸í½ÃÇØÁà¾ßÇÔ.
+//math.h ë¥¼ includeí–ˆê¸° ë•Œë¬¸ì— ì»´íŒŒì¼ì‹œ -ln ì„ ê¼­ ëª…ì‹œí•´ì¤˜ì•¼í•¨.
 //ex) gcc -o server GAM-Z_server.c -ln
 #include <math.h>
 
@@ -34,7 +34,7 @@ void update_process(short *, struct fb_var_screeninfo);
 void make_radar(short *, struct fb_var_screeninfo,int *);
 
 unsigned char quit = 0;
- 
+
 void user_signal1(int sig)
 {
     quit = 1;
@@ -49,7 +49,7 @@ int main( void)
 	pid_t pid;
    	struct sockaddr_in   server_addr;
    	struct sockaddr_in   client_addr;
-	struct fb_var_screeninfo fvs; 
+	struct fb_var_screeninfo fvs;
 	short *pfbdata;
 	int val = 1;
    	char buff_rcv[BUFF_SIZE+5];
@@ -66,7 +66,7 @@ int main( void)
 	}
 	pfbdata = (short *) mmap(0, fvs.xres*fvs.yres*(sizeof(short)), PROT_READ|\
 		 PROT_WRITE, MAP_SHARED, frame_fd, 0);
-	
+
    	server_socket  = socket( PF_INET, SOCK_STREAM, 0);
    	if( -1 == server_socket)
    	{
@@ -107,7 +107,7 @@ int main( void)
 	(void)signal(SIGINT, user_signal1);
 
 	send_flag = mmap(NULL, sizeof *send_flag, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-    receive_flag = mmap(NULL, sizeof *receive_flag, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+    	receive_flag = mmap(NULL, sizeof *receive_flag, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
 	logout = mmap(NULL, sizeof *logout, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
 	update_flag = mmap(NULL, sizeof *update_flag, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
 	up_data = mmap(NULL,(sizeof *up_data)*70, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
@@ -115,7 +115,7 @@ int main( void)
 	*send_flag = 0;
 	*receive_flag = 0;
 	*logout = 0;
-	
+
 	pid = fork();
 	if(pid != 0)
 	{
@@ -169,7 +169,7 @@ void update_process(short *pfbdata, struct fb_var_screeninfo fvs)
     }
 	buff_size=9;
 
-	led_num = 0;			
+	led_num = 0;
 	write(dev_led,&led_num,1);
 	memset(string,0,sizeof(string));
 	strcpy(str,"rada_server");
@@ -182,12 +182,12 @@ void update_process(short *pfbdata, struct fb_var_screeninfo fvs)
     memset(string+LINE_BUFF+str_size,' ',LINE_BUFF-str_size);
 	write(dev_text,string,MAX_BUFF);
 	while(!quit){
-		usleep(10000);		
+		usleep(10000);
 		read(dev, &push_sw_buff,9);
 		if(*update_flag){
 			printf("update complete!!\n");
 			while(*semaphore){}
-			make_radar(pfbdata, fvs, up_data);	
+			make_radar(pfbdata, fvs, up_data);
 			sprintf(str,"%4d-%02d-%02d %02d:%02d", *(up_data + 61) + 1900, *(up_data + 62), *(up_data + 63), *(up_data + 64), *(up_data + 65));
 			memset(string,0,sizeof(string));
 			str_size=strlen(str);
@@ -202,12 +202,12 @@ void update_process(short *pfbdata, struct fb_var_screeninfo fvs)
 		}
 		if(push_sw_buff[0] == 1){
 			*semaphore = 1;
-			fp = fopen("input.txt", "r");  // ?Œì¼ ?´ê¸°
+			fp = fopen("input.txt", "r");
 			i = 0;
 			n = 0;
-			while(1)  // ?Œì¼???ì´ ?„ë‹ˆ?¼ë©´
+			while(1)
 	        {
-	            fgets(str_buff[i], 512, fp);  // ìµœë? 80ì¹¸ì§œë¦??œì¤„ ?½ê¸°
+	            fgets(str_buff[i], 512, fp);
 	            if(feof(fp))
 	                break;
 	            n++;
@@ -234,8 +234,8 @@ void update_process(short *pfbdata, struct fb_var_screeninfo fvs)
 			}
 			num = n-1;
 			make_radar(pfbdata, fvs,data[num]);
-			led_num = (char) pow(2.0,(double) num);			
-			write(dev_led,&led_num,1);	
+			led_num = (char) pow(2.0,(double) num);
+			write(dev_led,&led_num,1);
 			sprintf(str,"%4d-%02d-%02d %02d:%02d", data[num][61] + 1900, data[num][62], data[num][63], data[num][64], data[num][65]);
 			memset(string,0,sizeof(string));
 			str_size=strlen(str);
@@ -261,16 +261,16 @@ void update_process(short *pfbdata, struct fb_var_screeninfo fvs)
 					strncat(string,str,str_size);
 				    memset(string+LINE_BUFF+str_size,' ',LINE_BUFF-str_size);
 					write(dev_text,string,MAX_BUFF);
-					led_num = 0;			
+					led_num = 0;
 					write(dev_led,&led_num,1);
 					break;
 				}
-				else if(push_sw_buff[0] == 1){ 
+				else if(push_sw_buff[0] == 1){
 					if(num > 0)
 						num--;
-					led_num = (char)pow(2.0,(char) num);			
+					led_num = (char)pow(2.0,(char) num);
 					write(dev_led,&led_num,1);
-					make_radar(pfbdata, fvs,data[num]);		
+					make_radar(pfbdata, fvs,data[num]);
 					sprintf(str,"%4d-%02d-%02d %02d:%02d", data[num][61] + 1900, data[num][62], data[num][63], data[num][64], data[num][65]);
 					memset(string,0,sizeof(string));
 					str_size=strlen(str);
@@ -285,9 +285,9 @@ void update_process(short *pfbdata, struct fb_var_screeninfo fvs)
 				else if(push_sw_buff[1] == 1){
 					if(num < n-1)
 						num++;
-					led_num = (char)pow(2.0,(double) num);			
+					led_num = (char)pow(2.0,(double) num);
 					write(dev_led,&led_num,1);
-					make_radar(pfbdata, fvs,data[num]);	
+					make_radar(pfbdata, fvs,data[num]);
 					sprintf(str,"%4d-%02d-%02d %02d:%02d", data[num][61] + 1900, data[num][62], data[num][63], data[num][64], data[num][65]);
 					memset(string,0,sizeof(string));
 					str_size=strlen(str);
@@ -300,9 +300,9 @@ void update_process(short *pfbdata, struct fb_var_screeninfo fvs)
 					write(dev_text,string,MAX_BUFF);
 				}
 
-			}			
+			}
 		}
-	}	
+	}
 	close(dev);
 	close(dev_text);
 	close(dev_led);
@@ -315,10 +315,10 @@ void client_receive_process(int *sock)
 	FILE *fp;
 	char str_buff[10][512] = {0}; //Â¿Â¿Â¿ Â¿Â¿Â¿Â¿ Â¿Â¿Â¿ 80Â¿Â¿Â¿ Â¿Â¿!
 	printf("I'm client receive process\n");
-	
+
 	while(1)
-    {                               
-        memset(buff,0,sizeof(buff)); 
+    {
+        memset(buff,0,sizeof(buff));
         read(*sock, buff, BUFF_SIZE);
         printf("%s\n",buff);
         if(!strcmp(buff,"logout"))
@@ -328,40 +328,37 @@ void client_receive_process(int *sock)
             break;
         }
         else if(!strcmp(buff,"data_in"))
-        {        
-            memset(buff,0,sizeof(buff)); 
+        {
+            memset(buff,0,sizeof(buff));
             read(*sock, buff, BUFF_SIZE);
 			printf("now: %d-%d-%d %d:%d:%d\n", buff[61] + 1900, buff[62], buff[63],buff[64], buff[65], buff[66]);
-			
-        	memset(str_buff,0,sizeof(str_buff)); 
-			*semaphore = 1;	
-            fp = fopen("input.txt", "r");  // ?Œì¼ ?´ê¸°
+        	memset(str_buff,0,sizeof(str_buff));
+			*semaphore = 1;
+            fp = fopen("input.txt", "r");
             putchar('\n');
             i = 0;
 			n = 0;
-            while(1)  // ?Œì¼???ì´ ?„ë‹ˆ?¼ë©´
+            while(1)
             {
-            fgets(str_buff[i], 512, fp);  // ìµœë? 80ì¹¸ì§œë¦??œì¤„ ?½ê¸°
-				if(feof(fp))    
-                    break;    
+            fgets(str_buff[i], 512, fp);
+				if(feof(fp))
+                    break;
 				n++;
 				i++;
-            }    
+            }
 			fclose(fp);
             printf("now, we have  %d data set. add new data set.\n\n",n);
             if(n < 8){
-            	fp = fopen("input.txt", "a+");  // ?Œì¼ ?´ê¸°
+            	fp = fopen("input.txt", "a+");
 				for(i = 0; i < 70; i++) {
 					*(up_data + i) = buff[i];
 					fprintf(fp,"%d ",buff[i]);
-					//printf("%d\n",*(up_data + i));
 				}
 				fprintf(fp,"\n");
 			} else {
-            	fp = fopen("input.txt", "w");  // ?Œì¼ ?´ê¸°
+            	fp = fopen("input.txt", "w");
    		        for(i = 0; i < n - 1; i++){
 					strcpy(str_buff[i],str_buff[i+1]);
-					//printf("%s\n",str_buff[i]);
 				}
 				for(i = 0; i < n - 1 ; i++){
                  	fprintf(fp,"%s",str_buff[i]);
@@ -374,9 +371,9 @@ void client_receive_process(int *sock)
 			}
 			*update_flag = 1;
 			fclose(fp);
-			*semaphore = 0;	
+			*semaphore = 0;
         }
-     } 
+     }
 }
 
 void make_radar(short *pfbdata, struct fb_var_screeninfo fvs, int *ptr)
@@ -461,7 +458,7 @@ void make_radar(short *pfbdata, struct fb_var_screeninfo fvs, int *ptr)
 				*(pfbdata+offset+repx) = 0x0000;
 			}
 		}
-	}	
+	}
 		//right circle
 		for(i = 0; i <= 15; i++)
 		{
@@ -528,7 +525,6 @@ void make_radar(short *pfbdata, struct fb_var_screeninfo fvs, int *ptr)
 				}
 			}
 		}
-	
 		for(i = 15; i > 0; i--)
 		{
 			if(r[15 + (16 - i)] - 1< warn_val){
@@ -550,7 +546,7 @@ void make_radar(short *pfbdata, struct fb_var_screeninfo fvs, int *ptr)
 					}
 					else if((x)*(x) + (y)*(y) <= (temp_warn + 10)*(temp_warn + 10) && (x*x)+(y*y) > (temp_warn)*(temp_warn)){
 						*(pfbdata+offset+repx) = 0b1111111111100000;
-					} 
+					}
 					else if(y >=(2 * x) - 1 &&  y <= (2*x) + 1)
 					{
 						if((x)*(x) + (y)*(y) <= 500*500){
@@ -583,7 +579,6 @@ void make_radar(short *pfbdata, struct fb_var_screeninfo fvs, int *ptr)
 								*(pfbdata+offset+repx) = 0;
 						}
 					}
-	
 				}
 			}
 		}
@@ -591,9 +586,8 @@ void make_radar(short *pfbdata, struct fb_var_screeninfo fvs, int *ptr)
 		{
 			offset = repy * fvs.xres;
 			*(pfbdata+offset+512) = 0xffff;
-			
 		}
-		
+
 		//leftcircle
 		for(i = 1; i <= 15; i++)
 		{
@@ -617,7 +611,7 @@ void make_radar(short *pfbdata, struct fb_var_screeninfo fvs, int *ptr)
 					}
 					else if((x)*(x) + (y)*(y) <= (temp_warn + 10)*(temp_warn + 10) && (x*x)+(y*y) > (temp_warn)*(temp_warn)){
 						*(pfbdata+offset+repx) = 0b1111111111100000;
-					} 				
+					}
 					else if(y >=(2 * x) - 1 &&  y <= (2*x) + 1)
 					{
 						if((x)*(x) + (y)*(y) <= 500*500){
@@ -668,13 +662,13 @@ void make_radar(short *pfbdata, struct fb_var_screeninfo fvs, int *ptr)
 					x = repx - 512;
 					x = -1*x;
 					y = 599 - repy;
-					temp = (int) (y*10000)/x;				
+					temp = (int) (y*10000)/x;
 					if((x)*(x) + (y)*(y) <= 250000 + 10000 && (x*x)+(y*y) > 250000){
 						*(pfbdata+offset+repx) = 0xffff;
 					}
 					else if( (x)*(x) + (y)*(y) <= (temp_warn + 10)*(temp_warn + 10) && (x*x)+(y*y) > (temp_warn)*(temp_warn)){
 						*(pfbdata+offset+repx) = 0b1111111111100000;
-					} 
+					}
 					else if(y >=(2 * x) - 1 &&  y <= (2*x) + 1)
 					{
 						if((x)*(x) + (y)*(y) <= 500*500){
@@ -705,10 +699,10 @@ void make_radar(short *pfbdata, struct fb_var_screeninfo fvs, int *ptr)
 								*(pfbdata+offset+repx) = color;
 							else if((x)*(x) + (y)*(y) <= 500*500)
 								*(pfbdata+offset+repx) = 0;
-						}
 					}
 				}
 			}
+		}
 	}
 }
 
