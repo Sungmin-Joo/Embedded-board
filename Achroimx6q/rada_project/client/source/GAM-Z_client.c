@@ -1,4 +1,5 @@
-/*term project*/
+/*Achroimx6q의 임베디드 리눅스 환경에서
+임베디드 레이다 시스템 프로젝트 중 클라이언트 소스코드*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -107,7 +108,7 @@ void main(int argc, char **argv)
 	=
 	= 6. Dot_matrix, 7-seg, Text LCD, Buzzer, Key 관련??
 	==================================================*/
-	
+
 	int i;
 	int frame_fd, check, str_size;
 	struct fb_var_screeninfo fvs; 
@@ -118,7 +119,7 @@ void main(int argc, char **argv)
 	mmset();
 
 
-	//Initialize touchscreen's pwm val/ 
+	//Initialize touchscreen's pwm val/
 	system("echo 100 > /sys/devices/platform/pwm-backlight.2/backlight/pwm-backlight.2/brightness");
 
 
@@ -259,7 +260,7 @@ void client_send_process(void)
 			*(data_buf + 64) = tm.tm_hour;
 			*(data_buf + 65) = tm.tm_min;
 			*(data_buf + 66) = tm.tm_sec;
-			
+
 			//현재 설정된 감지거리에 관한 정보도 같이 전송.
 			*(data_buf + 67) = *warn_data;
 			*(data_buf + 68) = 0;

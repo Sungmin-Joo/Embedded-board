@@ -1,3 +1,9 @@
+/*
+Achroimx6q의 임베디드 리눅스 환경에서
+임베디드 레이다 시스템 프로젝트 중 서버 소스코드
+추후 주석으로 설명 달아두기.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
