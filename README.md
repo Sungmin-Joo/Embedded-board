@@ -40,7 +40,10 @@ Control Atmega128, ESP8266, Achro-I.MX6Q//201809~201905
   -  InfluxDB와 Grafana + Docker + ESP8266 조합으로 Smart Home Environment
 
 
+ ## Info
 
- ## 정보
-
- 주성민(Joo Sung Min) – big-joo_dev@naver.com
+ Name      : 주성민(Joo Sung Min)  
+ E-mail    : big-joo_dev@naver.com  
+ Phone     : 010-2770-4367
+ Univesity : Korea Polytechnic University  
+ 
