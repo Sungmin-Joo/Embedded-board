@@ -14,7 +14,7 @@ Control Atmega128, ESP8266, Achro-I.MX6Q//201809~201905
   -  운영체제를 탑재한 쿼드코어 고성능 임베디드 보드  
      자세한 스펙은 [보드 정보](http://huins.com/m13.php?m=rd&no=330)에서 확인 가능  
   
-  -  디바이스 드라이버 제작 + Character File 제어를 통한 kernel programming을 연습  
+  -  디바이스 드라이버 제작 + Character File 제어를 통한 Kernel Programming을 연습  
   
   -  학기 프로젝트로는 C Socket 모듈을 사용하여 Server, Client를 따로 구성 두 대의 Achro-I.MX6Q 사용.  
      -> Server, Client모두 직접 프로그래밍  
